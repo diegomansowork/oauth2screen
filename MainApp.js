@@ -9,6 +9,7 @@ var options = {
     key: fs.readFileSync('./key.pem', 'utf8'),  
     cert: fs.readFileSync('./server.crt', 'utf8')  
 };
+
  
 //console.log("KEY: ", options.key)  
 //console.log("CERT: ", options.cert)  
