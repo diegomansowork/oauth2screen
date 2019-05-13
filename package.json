@@ -1,0 +1,15 @@
+{
+  "name": "oauthscreen",
+  "version": "1.0.0",
+  "description": "OAuth2 sample app for testing API Management products",
+  "main": "MainApp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Digital",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "cors":"^2.8.5"
+  }
+}
