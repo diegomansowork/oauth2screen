@@ -6,6 +6,10 @@ OAuthScreen is a sample application used to test OAuth2 in different  API Manage
 
 Just install nodejs and clone this proyect in your local machine.
 
+```nodejs
+npm install
+```
+
 ## Usage
 
 ```nodejs
