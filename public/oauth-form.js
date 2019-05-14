@@ -13,6 +13,7 @@ var responseType;
 var grant_type;
 var _url;
 
+
 //Validation functions
 
 function genericFieldValidation(field, mx, my) {
@@ -95,7 +96,7 @@ function authorize() {
                 var url =   win.document.URL;
                 codeSAG = getUrlParameter(url, 'code');
                 //Check state error
-                if(state.value!=null){
+                if(state.value!=null && codeSAG==null){
                     if(!checkState(getUrlParameter(url, 'state'))){
                         alert('Error: State Check KO');
                         throw "State Check KO";
@@ -109,6 +110,10 @@ function authorize() {
             console.log('Error: ' + e);
         }
     }, 500);
+}
+
+function encodeBase64(targetString){
+    return btoa(targetString);
 }
 
 function checkState(responseAuthState){
@@ -132,6 +137,7 @@ function getUrlParameter(url, name) {
 }
 
 function getBearerToken(){
+   // alert('Authorization: Basic '+ encodeBase64( document.datosOAuth2.clientID.value + ":" +  document.datosOAuth2.clientSecret.value));
     if(!getOauthTokenValidation()){
         return false;
     }
@@ -155,6 +161,7 @@ function getBearerToken(){
         'headers': {
         // Use access_token previously retrieved from inContact token 
         // service.
+            'Authorization': 'Basic '+ encodeBase64(clientID.value + ":" + clientSecret.value),
             'Content-Type': 'application/x-www-form-urlencoded',
             'Access-Control-Allow-Origin': '*'
         },
