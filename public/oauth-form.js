@@ -4,6 +4,7 @@ var expiresIn;
 var callbackURL;
 var authURL;
 var accessTokenURL;
+var refreshTokenURL;
 var clientID;
 var clientSecret;
 var scopes;
@@ -12,6 +13,7 @@ var codeSAG;
 var responseType;
 var grant_type;
 var _url;
+
 
 
 //Validation functions
@@ -50,6 +52,16 @@ function getOauthTokenValidation(){
     }
     return true; 
 }
+
+function getRefreshTokenValidation(){
+    if (refreshTokenURL == null) {
+        alert("You must have a valid Refresh Token before ask for a new token");
+       // uid.focus();
+        return false;
+    }
+    return true; 
+}
+
 
 function authorizeValidation(){
     callbackURL = document.datosOAuth2.callbackURL;
@@ -169,16 +181,18 @@ function getBearerToken(){
         'success': function (result) {
             //Process success actions
 
-             acToken    = result.access_token;
-             tokenType  = result.token_type;
-             expiresIn  = result.expires_in;
-             
+             acToken        = result.access_token;
+             tokenType      = result.token_type;
+             expiresIn      = result.expires_in;
+             refreshToken   =  result.refresh_token;
+
             baseURI = result.resource_server_base_uri;
             // alert('Success!\r\nAccess Token:\r' + acToken);
             document.getElementById('bearerToken').innerHTML = result.access_token;
             document.getElementById('tokenType').innerHTML = result.token_type;
             document.getElementById('expiresIn').innerHTML = result.expires_in;
-
+            document.getElementById('refreshToken').innerHTML = result.refresh_token;
+            document.getElementById('scopesFinal').innerHTML = result.scope;
             return result;
         },
         'error': function (XMLHttpRequest, textStatus, errorThrown) {
@@ -191,6 +205,65 @@ function getBearerToken(){
         }
     });
 }
+
+function getRefreshToken(){
+    // alert('Authorization: Basic '+ encodeBase64( document.datosOAuth2.clientID.value + ":" +  document.datosOAuth2.clientSecret.value));
+    refreshTokenURL = $('#refreshModal #refreshURLInput').val(); 
+    $('#refreshModal').modal('hide');
+    if(!getRefreshTokenValidation()){
+         return false;
+     }
+     //accessTokenURL = document.datosOAuth2.accessTokenURL;
+     //clientID
+     var url_base_refresh = refreshTokenURL + '?grant_type=refresh_token&refresh_token=' + refreshToken + '&scope=' + scopes.value;
+     console.log('url_base_refresh ' + url_base_refresh);
+     $.ajax({
+         'url': url_base_refresh,
+         'type': 'POST',
+         'crossDomain': true,
+         'content-Type': 'x-www-form-urlencoded',
+         'dataType': 'json',
+         'xhrFields': {
+             // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+             // This can be used to set the 'withCredentials' property.
+             // Set the value to 'true' if you'd like to pass cookies to the server.
+             // If this is enabled, your server must respond with the header
+             'withCredentials': false
+           },
+         'headers': {
+         // Use access_token previously retrieved from inContact token 
+         // service.
+             'Authorization': 'Basic '+ encodeBase64(clientID.value + ":" + clientSecret.value),
+             'Content-Type': 'application/x-www-form-urlencoded',
+             'Access-Control-Allow-Origin': '*'
+         },
+        // 'data': requestPayload,
+         'success': function (result) {
+             //Process success actions
+ 
+              acToken    = result.access_token;
+              tokenType  = result.token_type;
+              expiresIn  = result.expires_in;
+              
+             baseURI = result.resource_server_base_uri;
+             // alert('Success!\r\nAccess Token:\r' + acToken);
+             document.getElementById('bearerToken').innerHTML = result.access_token;
+             document.getElementById('tokenType').innerHTML = result.token_type;
+             document.getElementById('expiresIn').innerHTML = result.expires_in;
+             document.getElementById('refreshToken').innerHTML = result.refresh_token;
+             document.getElementById('scopesFinal').innerHTML = result.scope;
+             return result;
+         },
+         'error': function (XMLHttpRequest, textStatus, errorThrown) {
+             //Process error actions
+             alert('Error: ' + errorThrown);
+             console.log(XMLHttpRequest.status + ' ' + 
+                 XMLHttpRequest.statusText);
+             console.log('url_base_refresh_error: ' + url_base_refresh);    
+             return false;
+         }
+     });
+ }
 
 function callAPI(){
 
