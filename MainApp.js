@@ -2,7 +2,7 @@ var http = require('http');
 var express = require('express');  
 var cors = require('cors');
 var app = express();  
-const httpsPort = 1234;  
+const httpsPort = 8089;  
 var https = require('https');  
 var fs = require('fs');  
 var options = {  
@@ -29,9 +29,9 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-app.use(cors({ origin: 'https://localhost:1234' , credentials :  true}));
+app.use(cors({ origin: 'https://localhost:8089' , credentials :  true}));
 var secureServer = https.createServer(options, app).listen(httpsPort, () => {  
-    console.log(">> CentraliZr listening at port " + httpsPort);  
+    console.log(">> OAuth2 Form Demo listening at port " + httpsPort);  
 });  
 /*app.get('/oauth2', function(req, res) {  
     res.sendFile(__dirname + '/oauth-form.html');  
