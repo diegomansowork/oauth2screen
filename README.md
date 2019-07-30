@@ -1,6 +1,6 @@
 # OAuthScreen
 
-OAuthScreen is a sample application used to test OAuth2 in different  API Management products.
+OAuthScreen is a sample application used to test OAuth2 in different  API Management products. This first version only support Authorization code grant type.
 
 ## Installation
 
